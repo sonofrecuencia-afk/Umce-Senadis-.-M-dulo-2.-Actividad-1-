@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad UMCE-Senadis: ¿Cómo entiendo la inclusión?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3a5f;
+            --secondary-blue: #3b82f6;
+            --success-green: #10b981;
+            --error-red: #ef4444;
+            --text-dark: #1e293b;
+            --medium-gray: #e2e8f0;
+        }
+
+        /* Consideraciones SENADIS: Sin serifa en todo el documento */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-dark);
+            margin: 0; padding: 0; min-height: 100vh; overflow-y: auto;
+        }
+
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .header-section { background: rgba(255,255,255,0.95); border-bottom: 6px solid var(--secondary-blue); text-align: center; padding: 1.5rem; }
+        
+        /* Títulos sin serifa y con buen peso visual */
+        .main-title { font-weight: 800; font-size: 2rem; color: var(--primary-blue); margin: 0; }
+        
+        .main-content { max-width: 850px; margin: 1.5rem auto; padding: 0 1rem; padding-bottom: 3rem; }
+
+        .progress-section { background: rgba(255,255,255,0.98); border-radius: 15px; padding: 1.2rem; margin-bottom: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .progress-bar { width: 100%; height: 10px; background: var(--medium-gray); border-radius: 5px; overflow: hidden; margin-top: 8px; }
+        .progress-fill { height: 100%; background: var(--secondary-blue); width: 0%; transition: width 0.5s ease; }
+
+        .screen { display: none; background: rgba(255,255,255,0.98); border-radius: 20px; padding: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border: 2px solid rgba(102, 126, 234, 0.2); }
+        .screen.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tamaño mediano equilibrado */
+        .question-image { 
+            height: 250px; /* Reducción estratégica para ganar máxima nitidez */
+            width: auto; 
+            max-width: 100%; 
+            border-radius: 12px; 
+            margin: 1.5rem auto; 
+            display: block; 
+            border: 2px solid #e2e8f0; 
+            object-fit: contain; 
+            background: white; 
+        }
+
+        .options-grid { display: grid; gap: 1rem; margin-top: 1.5rem; }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* Botones con texto más grande para legibilidad */
+        .option-btn { background: white; border: 2px solid var(--medium-gray); padding: 1.1rem; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; color: var(--text-dark); }
+        .option-btn:hover { border-color: var(--secondary-blue); background: #f0f7ff; transform: translateY(-2px); }
+        .option-btn.selected { background: var(--secondary-blue); color: white; border-color: var(--primary-blue); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
+        .option-btn.disabled { opacity: 0.6; pointer-events: none; }
+
+        /* Feedback con alto contraste y fuente clara */
+        .feedback-box { margin-top: 1.5rem; padding: 1.8rem; border-radius: 15px; display: none; text-align: left; font-size: 1.15rem; line-height: 1.7; border-left: 8px solid; font-weight: 500; }
+        .feedback-box.correct { background: #e6fffa; border-color: var(--success-green); color: #065f46; }
+        .feedback-box.error { background: #fff5f5; border-color: var(--error-red); color: #9b2c2c; }
+        .feedback-box.neutral { background: #f0f9ff; border-color: var(--secondary-blue); color: #1e3a5f; }
+
+        .btn-next { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 1rem 2.5rem; border-radius: 35px; font-size: 1.2rem; font-weight: 800; margin-top: 2rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3); }
+        .btn-next:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        .badge { background: #e2e8f0; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; color: var(--secondary-blue); display: inline-block; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .question-text { font-weight: 700; color: var(--primary-blue); font-size: 1.3rem; line-height: 1.5; margin-bottom: 1.5rem; }
+
+        .custom-select, .custom-textarea { width: 100%; padding: 1rem; border: 2px solid var(--medium-gray); border-radius: 10px; font-family: inherit; margin-bottom: 1.5rem; box-sizing: border-box; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <header class="header-section">
+        <h1 class="main-title">¿Cómo entiendo la inclusión?</h1>
+        <p style="margin:8px 0 0 0; font-size: 1rem; color: #475569; font-weight: 600;">Activación de Conocimientos Previos - UMCE-Senadis</p>
+    </header>
+
+    <div class="main-content">
+        <div class="progress-section" id="progress-container">
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 800; color: var(--primary-blue);">
+                <span>Progreso de la actividad</span>
+                <span><span id="current-step">1</span>/10</span>
+            </div>
+            <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        </div>
+
+        <div id="screen-intro" class="screen active">
+            <h2 style="color: var(--primary-blue); margin-top:0; font-weight: 800; font-size: 1.8rem;">¡Te damos la bienvenida!</h2>
+            <p style="font-size: 1.1rem; line-height: 1.6;">El propósito de esta actividad es explorar y visibilizar los conocimientos, creencias y enfoques previos en torno a la discapacidad, la integración y la inclusión.</p>
+            <div style="background: #f8fafc; padding: 1.8rem; border-radius: 15px; text-align: left; margin: 2rem 0; border-left: 6px solid var(--secondary-blue); font-size: 1.05rem; line-height: 1.7;">
+                <strong style="color: var(--primary-blue); font-size: 1.2rem;">Instrucciones para el estudiante:</strong>
+                <ul style="margin: 12px 0 0 0; padding-left: 1.5rem;">
+                    <li>A continuación encontrarás una serie de imágenes y afirmaciones.</li>
+                    <li>Analiza cada una y selecciona la opción que mejor se ajuste a tu interpretación actual.</li>
+                    <li><strong>No hay respuestas correctas ni incorrectas en esta etapa.</strong> El objetivo es reconocer cómo comprendes estos conceptos antes de iniciar el módulo.</li>
+                </ul>
+            </div>
+            <button id="btn-start" class="btn-next">Comenzar Exploración</button>
+        </div>
+
+        <div id="screen-question" class="screen">
+            <span id="q-badge" class="badge">Sección</span>
+            <div id="image-container" style="display:none;">
+                <img id="q-image" class="question-image" src="" alt="Imagen descriptiva del concepto">
+            </div>
+            <div id="q-text" class="question-text">Texto de pregunta</div>
+            <div id="options-container" class="options-grid"></div>
+            <div id="feedback-container" class="feedback-box"></div>
+            <button id="btn-next-q" class="btn-next" style="display:none; margin: 2rem auto 0 auto;">Continuar con el viaje</button>
+        </div>
+
+        <div id="screen-outro" class="screen">
+            <span class="badge">Reflexión UMCE</span>
+            <h2 style="color: var(--primary-blue); margin-bottom: 1.5rem; font-weight: 800; font-size: 1.8rem;">Cierre Metacognitivo</h2>
+            <div style="text-align: left; font-size: 1.1rem;">
+                <label style="font-weight: 700; display: block; margin-bottom: 10px; color: var(--primary-blue);">¿Qué afirmación o imagen te generó más duda o conflicto?</label>
+                <select class="custom-select">
+                    <option value="">Selecciona una opción...</option>
+                    <option>Los conceptos de las imágenes (Exclusión, Segregación, etc.)</option>
+                    <option>Dimensión 1: Cultura Inclusiva</option>
+                    <option>Dimensión 2: Política Inclusiva</option>
+                    <option>Dimensión 3: Prácticas Inclusivas</option>
+                </select>
+
+                <label style="font-weight: 700; display: block; margin-bottom: 10px; color: var(--primary-blue);">A lo largo de este módulo, volverás a enfrentarte a estas mismas situaciones. ¿Cambiarías tus respuestas?</label>
+                <textarea class="custom-textarea" rows="4" placeholder="Escribe aquí tu reflexión personal..."></textarea>
+            </div>
+            <button id="btn-finish" class="btn-next">Finalizar y Guardar</button>
+        </div>
+    </div>
+
+<script>
+    const IMG_1 = "https://i.postimg.cc/MfpwytnN/Imagen1.png";
+    const IMG_2 = "https://i.postimg.cc/tn4bhD1j/Imagen2.png";
+    const IMG_3 = "https://i.postimg.cc/rRwTSgdL/Imagen3.png";
+    const IMG_4 = "https://i.postimg.cc/9wQ2G14V/Imagen4.png";
+
+    const ACTIVITY_DATA = [
+        // PESTAÑA 1: IMÁGENES
+        {
+            section: "Pestaña 1: Imágenes", image: IMG_1, type: "quiz", cols: 2,
+            text: "Analiza la imagen y selecciona el concepto que mejor se ajuste a tu interpretación actual:",
+            options: [
+                { text: "Exclusión", isCorrect: true, feedback: "Correcto: Tal como seleccionaste, esta imagen se refiere al concepto de EXCLUSIÓN, ya que evidencia la separación y el aislamiento de una o más personas o grupos, limitando su participación en distintos espacios. Profundizaremos en este enfoque médico-clínico a lo largo del módulo." },
+                { text: "Segregación", feedback: "Es muy normal que a veces ocurran confusiones en los conceptos, ya que históricamente hemos sido educados bajo estas creencias. Aun así, es importante distinguir que la EXCLUSIÓN implica la separación y marginación de ciertos grupos, limitando su participación en los espacios sociales, educativos o comunitarios." },
+                { text: "Integración", feedback: "Es muy normal que a veces ocurran confusiones en los conceptos, ya que históricamente hemos sido educados bajo estas creencias. Aun así, es importante distinguir que la EXCLUSIÓN implica la separación y marginación de ciertos grupos, limitando su participación en los espacios sociales, educativos o comunitarios." },
+                { text: "Inclusión", feedback: "Es muy normal que a veces ocurran confusiones en los conceptos, ya que históricamente hemos sido educados bajo estas creencias. Aun así, es importante distinguir que la EXCLUSIÓN implica la separación y marginación de ciertos grupos, limitando su participación en los espacios sociales, educativos o comunitarios." }
+            ]
+        },
+        {
+            section: "Pestaña 1: Imágenes", image: IMG_2, type: "quiz", cols: 2,
+            text: "Analiza la imagen y selecciona el concepto que mejor se ajuste a tu interpretación actual:",
+            options: [
+                { text: "Exclusión", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la segregación no implica necesariamente dejar fuera a las personas, sino separarlas en espacios distintos dentro de un mismo sistema, lo que también genera desigualdad en las oportunidades de participación." },
+                { text: "Segregación", isCorrect: true, feedback: "Correcto: Tal como seleccionaste, esta imagen se refiere al concepto de SEGREGACIÓN, ya que muestra la separación de personas o grupos en espacios diferenciados, aun cuando forman parte de un mismo contexto. Esta organización limita las oportunidades de interacción y de participación en igualdad de condiciones. Lo que seguiremos profundizando a lo largo del módulo." },
+                { text: "Integración", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la segregación no implica necesariamente dejar fuera a las personas, sino separarlas en espacios distintos dentro de un mismo sistema, lo que también genera desigualdad en las oportunidades de participación." },
+                { text: "Inclusión", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la segregación no implica necesariamente dejar fuera a las personas, sino separarlas en espacios distintos dentro de un mismo sistema, lo que también genera desigualdad en las oportunidades de participación." }
+            ]
+        },
+        {
+            section: "Pestaña 1: Imágenes", image: IMG_3, type: "quiz", cols: 2,
+            text: "Analiza la imagen y selecciona el concepto que mejor se ajuste a tu interpretación actual:",
+            options: [
+                { text: "Exclusión", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la integración implica que las personas se incorporan a un sistema ya existente, donde son ellas/os quienes deben adaptarse a las condiciones establecidas para poder participar." },
+                { text: "Segregación", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la integración implica que las personas se incorporan a un sistema ya existente, donde son ellas/os quienes deben adaptarse a las condiciones establecidas para poder participar." },
+                { text: "Integración", isCorrect: true, feedback: "Correcto: Tal como seleccionaste, esta imagen se refiere al concepto de integración, ya que muestra cómo una o más personas se incorporan a un espacio común, pero deben adaptarse a las condiciones ya establecidas. Si bien hay participación, esta no necesariamente se da en igualdad de condiciones. Seguiremos profundizando en este concepto a lo largo del módulo." },
+                { text: "Inclusión", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la integración implica que las personas se incorporan a un sistema ya existente, donde son ellas/os quienes deben adaptarse a las condiciones establecidas para poder participar." }
+            ]
+        },
+        {
+            section: "Pestaña 1: Imágenes", image: IMG_4, type: "quiz", cols: 2,
+            text: "Analiza la imagen y selecciona el concepto que mejor se ajuste a tu interpretación actual:",
+            options: [
+                { text: "Exclusión", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la inclusión no solo implica que las personas estén presentes, sino que participen en igualdad de condiciones, siendo el propio entorno el que se transforma para acoger y valorar la diversidad." },
+                { text: "Segregación", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la inclusión no solo implica que las personas estén presentes, sino que participen en igualdad de condiciones, siendo el propio entorno el que se transforma para acoger y valorar la diversidad." },
+                { text: "Integración", feedback: "Es muy normal que ocurran confusiones entre estos conceptos, ya que históricamente hemos sido educados bajo estas miradas. Sin embargo, es importante distinguir que la inclusión no solo implica que las personas estén presentes, sino que participen en igualdad de condiciones, siendo el propio entorno el que se transforma para acoger y valorar la diversidad." },
+                { text: "Inclusión", isCorrect: true, feedback: "Correcto: Tal como seleccionaste, esta imagen se refiere al concepto de inclusión, ya que muestra un espacio donde todas las personas participan activamente, siendo consideradas y valoradas en su diversidad. En este caso, es el entorno el que se adapta para garantizar la participación en igualdad de condiciones. Seguiremos profundizando en este concepto a lo largo del módulo." }
+            ]
+        },
+
+        // PESTAÑA 2: DIMENSIONES
+        {
+            section: "Dimensión 1: Cultura Inclusiva: (Creencias, valores y formas de comprender la diversidad)", image: null, type: "survey", cols: 1,
+            text: "Afirmación: “Algunos estudiantes no logran aprender porque tienen limitaciones personales que dificultan su participación.”",
+            options: [
+                { text: "Enfoque centrado en el estudiante", feedback: "Esta mirada pone el énfasis en las características individuales para explicar las dificultades. A lo largo del módulo, exploraremos cómo este enfoque ha influido históricamente en la educación." },
+                { text: "Enfoque centrado en el contexto", feedback: "Esta opción sugiere que las dificultades pueden estar relacionadas con el entorno. Más adelante revisaremos cómo esta perspectiva se vincula con enfoques inclusivos." },
+                { text: "No estoy seguro/a", feedback: "Es completamente válido tener dudas en esta etapa. Este módulo te ayudará a reconocer distintos enfoques para comprender estas situaciones." }
+            ]
+        },
+        {
+            section: "Dimensión 1: Cultura Inclusiva", image: null, type: "survey", cols: 1,
+            text: "Afirmación: “Todas las personas pueden aprender si se generan las condiciones adecuadas en el entorno educativo.”",
+            options: [
+                { text: "Enfoque de inclusión", feedback: "Esta perspectiva valora la diversidad como parte natural del aprendizaje y reconoce el rol del entorno. Profundizaremos en este enfoque durante el módulo." },
+                { text: "Enfoque de integración", feedback: "Esta opción puede reflejar una comprensión en la que el estudiante debe adaptarse al sistema. Más adelante analizaremos las diferencias entre integración e inclusión." },
+                { text: "No estoy seguro/a", feedback: "Este es un buen punto de partida. A lo largo del módulo podrás distinguir con mayor claridad estos enfoques." }
+            ]
+        },
+        {
+            section: "Dimensión 2: Política Inclusiva (Normas, decisiones institucionales y organización del sistema)", image: null, type: "survey", cols: 1,
+            text: "Afirmación: “Es necesario contar con diagnósticos para asignar apoyos educativos a los estudiantes.”",
+            options: [
+                { text: "Enfoque basado en diagnóstico", feedback: "Esta mirada organiza los apoyos a partir de características individuales. Durante el módulo analizaremos sus implicancias en la inclusión." },
+                { text: "Enfoque basado en barreras", feedback: "Esta opción considera que los apoyos pueden definirse observando el entorno y sus limitaciones. Profundizaremos en este enfoque más adelante." },
+                { text: "No estoy seguro/a", feedback: "Es esperable dudar frente a este tipo de decisiones. Este módulo te ayudará a comprender mejor estos enfoques." }
+            ]
+        },
+        {
+            section: "Dimensión 2: Política Inclusiva", image: null, type: "survey", cols: 1,
+            text: "Afirmación: “Las políticas educativas deben garantizar la participación de todos los estudiantes, independientemente de sus características.”",
+            options: [
+                { text: "Enfoque de igualdad de oportunidades", feedback: "Esta perspectiva busca asegurar las condiciones generales de acceso. Más adelante veremos cómo se relaciona con otros enfoques de inclusión." },
+                { text: "Enfoque de inclusión", feedback: "Esta opción enfatiza la participación activa de todas las personas. Profundizaremos en este principio a lo largo del módulo." },
+                { text: "No estoy seguro/a", feedback: "Este tipo de conceptos se irán aclarando a lo largo del curso." }
+            ]
+        },
+        {
+            section: "Dimensión 3: Prácticas Inclusiva: (Acciones concretas en el aula y en la enseñanza)1", image: null, type: "survey", cols: 1,
+            text: "Afirmación: “Un estudiante debe recibir apoyo fuera del aula regular para poder avanzar en sus aprendizajes.”",
+            options: [
+                { text: "Enfoque de integración", feedback: "Esta respuesta sugiere que el apoyo ocurre en espacios separados. Durante el módulo analizaremos cómo este enfoque se ha implementado en contextos educativos." },
+                { text: "Enfoque de inclusión", feedback: "Esta opción invita a reflexionar sobre cómo los apoyos pueden darse dentro del aula. Más adelante exploraremos estrategias asociadas a este enfoque." },
+                { text: "No estoy seguro/a", feedback: "Es natural tener dudas ante estas situaciones. A lo largo del módulo podrás profundizar en estas diferencias." }
+            ]
+        },
+        {
+            section: "Dimensión 3: Prácticas Inclusivas", image: null, type: "survey", cols: 1,
+            text: "Afirmación: “El docente debe adaptar sus estrategias para responder a la diversidad del estudiantado.”",
+            options: [
+                { text: "Enfoque centrado en la enseñanza", feedback: "Esta perspectiva reconoce el rol activo del docente en la generación de oportunidades de aprendizaje. Profundizaremos en este enfoque en el módulo." },
+                { text: "Enfoque centrado en el estudiante", feedback: "Esta opción pone el foco en las características individuales. Más adelante analizaremos cómo se relaciona con distintos enfoques pedagógicos." },
+                { text: "No estoy seguro/a", feedback: "Este es un buen punto de partida. A lo largo del módulo podrás desarrollar una mayor claridad sobre estos enfoques." }
+            ]
+        }
+    ];
+
+    let currentIndex = 0;
+
+    document.getElementById('btn-start').onclick = function() {
+        document.getElementById('screen-intro').classList.remove('active');
+        document.getElementById('progress-container').style.display = 'block';
+        document.getElementById('screen-question').classList.add('active');
+        loadQuestion();
+    };
+
+    document.getElementById('btn-next-q').onclick = function() {
+        currentIndex++;
+        if (currentIndex < ACTIVITY_DATA.length) {
+            loadQuestion();
+        } else {
+            document.getElementById('progress-fill').style.width = '100%';
+            document.getElementById('screen-question').classList.remove('active');
+            document.getElementById('screen-outro').classList.add('active');
+        }
+    };
+
+    document.getElementById('btn-finish').onclick = function() {
+        document.getElementById('screen-outro').innerHTML = `<div style="padding: 2rem 0; animation: fadeIn 0.5s;"><div style="font-size: 5rem; margin-bottom: 1.5rem;">🎉</div><h2 style="color: var(--success-green); font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem;">¡Actividad Finalizada!</h2><p style="color: #4b5563; font-size: 1.2rem; font-weight: 500;">Tus reflexiones han sido registradas. Ya estás listo/a para iniciar el módulo de aprendizaje de la UMCE.</p></div>`;
+    };
+
+    function loadQuestion() {
+        const q = ACTIVITY_DATA[currentIndex];
+        document.getElementById('current-step').textContent = currentIndex + 1;
+        document.getElementById('progress-fill').style.width = ((currentIndex) / 10 * 100) + '%';
+        document.getElementById('q-badge').textContent = q.section;
+        document.getElementById('q-text').textContent = q.text;
+        
+        const imgContainer = document.getElementById('image-container');
+        if (q.image) { 
+            document.getElementById('q-image').src = q.image; 
+            imgContainer.style.display = 'block'; 
+        } else { 
+            imgContainer.style.display = 'none'; 
+        }
+
+        const optsContainer = document.getElementById('options-container');
+        optsContainer.className = q.cols === 2 ? 'options-grid grid-2' : 'options-grid';
+        optsContainer.innerHTML = '';
+        
+        q.options.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt.text;
+            btn.onclick = function() {
+                const allBtns = document.querySelectorAll('.option-btn');
+                allBtns.forEach(b => b.classList.add('disabled'));
+                btn.classList.add('selected');
+                const fb = document.getElementById('feedback-container');
+                fb.className = 'feedback-box';
+                if (q.type === 'quiz') { fb.classList.add(opt.isCorrect ? 'correct' : 'error'); } else { fb.classList.add('neutral'); }
+                fb.innerHTML = opt.feedback;
+                fb.style.display = 'block';
+                document.getElementById('btn-next-q').style.display = 'block';
+            };
+            optsContainer.appendChild(btn);
+        });
+
+        document.getElementById('feedback-container').style.display = 'none';
+        document.getElementById('btn-next-q').style.display = 'none';
+    }
+</script>
+</body>
+</html>
